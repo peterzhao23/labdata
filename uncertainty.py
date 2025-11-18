@@ -2,16 +2,16 @@ import sympy as sp
 
 n,p,p0,g,t,d,L,D=sp.symbols('n p p0 g t d L D')
 Var= {
-    'n'=None,
-    'p'=None,
-    'p0'=None,
-    'g'=None,
-    't'=None,
-    'd'=None,
-    'L'=None,
-    'D'=None
+    'n':None,
+    'p':None,
+    'p0':None,
+    'g':None,
+    't':None,
+    'd':None,
+    'L':None,
+    'D':None
 }
-
+var=[]
 U_n,U_p,U_p0,U_g,U_t,U_d,U_L,U_D=sp.symbols('U_n U_p U_p0 U_g U_t U_d U_L U_D')
 U=[U_n,U_p,U_p0,U_g,U_t,U_d,U_L,U_D]
 n_ex=(1/18) * ((p - p0) * g * t * d**2) / (L * (1 + 2.4 * d / D))
@@ -24,8 +24,13 @@ for i in range(2,len(U)):
 E=E2**0.5 
 
 
-for i in Var:
-    var=Var[i]
-    =input("请输入变量{Var[i]}对应的值")
+for keys in Var.keys():
+    if keys=="n":
+        continue
+
+    i=input(f"请输入变量{keys}对应的值")
+    var.append(float(i))
+print(var)
+
 
   
