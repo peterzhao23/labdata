@@ -1,0 +1,466 @@
+# 正则表达式速查手册
+
+## 目录
+- [1. 基础概念](#1-基础概念)
+- [2. 元字符](#2-元字符)
+- [3. 字符类](#3-字符类)
+- [4. 量词](#4-量词)
+- [5. 分组与引用](#5-分组与引用)
+- [6. 边界匹配](#6-边界匹配)
+- [7. 标志修饰符](#7-标志修饰符)
+- [8. Python re模块](#8-python-re模块)
+- [9. 常用模式](#9-常用模式)
+- [10. 性能优化](#10-性能优化)
+
+---
+
+## 1. 基础概念
+
+### 什么是正则表达式？
+**正则表达式** 是用来匹配和处理文本的模式，由普通字符和特殊字符（元字符）组成。
+
+```python
+import re
+
+# 基本语法
+pattern = r'hello'  # 匹配字符串"hello"
+text = "hello world"
+result = re.search(pattern, text)
+print(result.group() if result else "未匹配")  # hello
+```
+
+---
+
+## 2. 元字符
+
+### 基本元字符
+| 字符 | 说明 | 示例 | 匹配 |
+|------|------|------|------|
+| `.` | 匹配除换行符外的任意字符 | `a.b` | aab, a1b, a#b |
+| `^` | 匹配字符串开头 | `^abc` | abc开头的字符串 |
+| `$` | 匹配字符串结尾 | `xyz$` | xyz结尾的字符串 |
+| `*` | 前一个字符0次或多次 | `ab*c` | ac, abc, abbc |
+| `+` | 前一个字符1次或多次 | `ab+c` | abc, abbc |
+| `?` | 前一个字符0次或1次 | `ab?c` | ac, abc |
+| `|` | 或操作符 | `a|b` | a 或 b |
+| `\` | 转义字符 | `\.` | 匹配点号. |
+
+```python
+# 示例
+pattern = r'^a.b$'  # 以a开头，中间任意字符，b结尾
+print(re.match(pattern, "axb"))  # 匹配
+print(re.match(pattern, "a\nb")) # 不匹配（.不匹配\n）
+```
+
+---
+
+## 3. 字符类
+
+### 预定义字符类
+| 字符 | 等效 | 说明 |
+|------|------|------|
+| `\d` | `[0-9]` | 数字 |
+| `\D` | `[^0-9]` | 非数字 |
+| `\w` | `[a-zA-Z0-9_]` | 单词字符 |
+| `\W` | `[^a-zA-Z0-9_]` | 非单词字符 |
+| `\s` | `[ \t\n\r\f\v]` | 空白字符 |
+| `\S` | `[^ \t\n\r\f\v]` | 非空白字符 |
+
+### 自定义字符类
+```python
+# [abc]     匹配a、b或c
+# [^abc]    匹配除a、b、c外的字符
+# [a-z]     匹配a到z的任意字符
+# [0-9]     匹配0到9的数字
+# [a-zA-Z]  匹配所有字母
+
+pattern = r'[aeiou]'  # 匹配任意元音字母
+print(re.findall(pattern, "hello world"))  # ['e', 'o', 'o']
+```
+
+---
+
+## 4. 量词
+
+### 贪婪量词（默认）
+| 量词 | 说明 | 示例 |
+|------|------|------|
+| `*` | 0次或多次 | `a*` |
+| `+` | 1次或多次 | `a+` |
+| `?` | 0次或1次 | `a?` |
+| `{n}` | 恰好n次 | `a{3}` |
+| `{n,}` | 至少n次 | `a{2,}` |
+| `{n,m}` | n到m次 | `a{2,4}` |
+
+### 非贪婪量词（加?）
+```python
+# 贪婪 vs 非贪婪
+text = "<div>test</div><div>test2</div>"
+
+# 贪婪模式
+greedy = r'<div>.*</div>'
+print(re.search(greedy, text).group())
+# <div>test</div><div>test2</div>
+
+# 非贪婪模式
+non_greedy = r'<div>.*?</div>'
+print(re.search(non_greedy, text).group())
+# <div>test</div>
+```
+
+---
+
+## 5. 分组与引用
+
+### 基本分组
+```python
+# 捕获分组
+pattern = r'(\d{4})-(\d{2})-(\d{2})'
+match = re.match(pattern, "2023-10-01")
+if match:
+    print(match.group())      # 2023-10-01
+    print(match.group(1))     # 2023
+    print(match.group(2))     # 10
+    print(match.group(3))     # 01
+    print(match.groups())     # ('2023', '10', '01')
+```
+
+### 命名分组
+```python
+# 命名分组 (?P<name>pattern)
+pattern = r'(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})'
+match = re.match(pattern, "2023-10-01")
+if match:
+    print(match.group('year'))   # 2023
+    print(match.groupdict())     # {'year': '2023', 'month': '10', 'day': '01'}
+```
+
+### 非捕获分组
+```python
+# (?:pattern) - 不捕获分组
+pattern = r'(?:Mr|Ms|Mrs)\. (\w+)'
+match = re.match(pattern, "Mr. Smith")
+if match:
+    print(match.group())      # Mr. Smith
+    print(match.group(1))     # Smith（只捕获名字）
+```
+
+### 后向引用
+```python
+# \1 引用第一个分组
+pattern = r'(\w+) \1'  # 匹配重复的单词
+print(re.search(pattern, "hello hello world").group())  # hello hello
+```
+
+---
+
+## 6. 边界匹配
+
+| 字符 | 说明 | 示例 |
+|------|------|------|
+| `\b` | 单词边界 | `\bword\b` |
+| `\B` | 非单词边界 | `\Bword\B` |
+| `^` | 字符串开头 | `^start` |
+| `$` | 字符串结尾 | `end$` |
+| `\A` | 字符串开头 | `\A开头` |
+| `\Z` | 字符串结尾 | `结尾\Z` |
+
+```python
+# 单词边界示例
+text = "cat category catfish"
+pattern1 = r'\bcat\b'    # 只匹配独立的cat
+pattern2 = r'cat'        # 匹配所有包含cat的
+
+print(re.findall(pattern1, text))  # ['cat']
+print(re.findall(pattern2, text))  # ['cat', 'cat', 'cat']
+```
+
+---
+
+## 7. 标志修饰符
+
+### 常用标志
+```python
+# re.IGNORECASE (re.I) - 忽略大小写
+print(re.findall(r'hello', 'Hello WORLD', re.I))  # ['Hello']
+
+# re.MULTILINE (re.M) - 多行模式
+text = "first\nsecond\nthird"
+print(re.findall(r'^\w+', text, re.M))  # ['first', 'second', 'third']
+
+# re.DOTALL (re.S) - 让.匹配包括换行符的所有字符
+text = "a\nb"
+print(re.findall(r'a.b', text))         # [] 
+print(re.findall(r'a.b', text, re.S))   # ['a\nb']
+
+# re.VERBOSE (re.X) - 允许添加注释和空白
+pattern = re.compile(r'''
+    \d{3}    # 区号
+    -        # 分隔符
+    \d{8}    # 电话号码
+''', re.VERBOSE)
+
+# 多个标志组合
+pattern = re.compile(r'pattern', re.I | re.M | re.S)
+```
+
+---
+
+## 8. Python re模块
+
+### 主要函数
+```python
+import re
+
+# 1. re.match() - 从字符串开头匹配
+result = re.match(r'hello', 'hello world')
+print(result.group() if result else None)  # hello
+
+# 2. re.search() - 搜索整个字符串
+result = re.search(r'world', 'hello world')
+print(result.group() if result else None)  # world
+
+# 3. re.findall() - 返回所有匹配的列表
+results = re.findall(r'\d+', 'a1b22c333')
+print(results)  # ['1', '22', '333']
+
+# 4. re.finditer() - 返回迭代器
+for match in re.finditer(r'\d+', 'a1b22c333'):
+    print(f"找到数字: {match.group()} at {match.span()}")
+
+# 5. re.sub() - 替换
+text = "2023-10-01"
+new_text = re.sub(r'(\d{4})-(\d{2})-(\d{2})', r'\2/\3/\1', text)
+print(new_text)  # 10/01/2023
+
+# 6. re.split() - 分割
+parts = re.split(r'\s+', 'a  b   c    d')
+print(parts)  # ['a', 'b', 'c', 'd']
+
+# 7. re.compile() - 预编译（提高性能）
+pattern = re.compile(r'\d+')
+print(pattern.findall('a1b22c333'))  # ['1', '22', '333']
+```
+
+### 匹配对象方法
+```python
+match = re.search(r'(\d{3})-(\d{4})', '电话: 010-1234')
+if match:
+    print(match.group())    # 010-1234
+    print(match.start())    # 3
+    print(match.end())      # 11
+    print(match.span())     # (3, 11)
+    print(match.groups())   # ('010', '1234')
+```
+
+---
+
+## 9. 常用模式
+
+### 邮箱验证
+```python
+email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+emails = ['test@example.com', 'invalid@com', 'name@domain.co.uk']
+for email in emails:
+    if re.match(email_pattern, email):
+        print(f"有效: {email}")
+    else:
+        print(f"无效: {email}")
+```
+
+### 手机号码
+```python
+phone_pattern = r'^1[3-9]\d{9}$'  # 中国大陆手机号
+phones = ['13800138000', '12345678901', '19912345678']
+for phone in phones:
+    if re.match(phone_pattern, phone):
+        print(f"有效手机号: {phone}")
+```
+
+### URL提取
+```python
+url_pattern = r'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+[/\w .?=%&+#-]*'
+text = "访问 https://www.example.com/path?q=test 和 http://test.org"
+urls = re.findall(url_pattern, text)
+print(urls)  # ['https://www.example.com/path?q=test', 'http://test.org']
+```
+
+### 中文匹配
+```python
+chinese_pattern = r'[\u4e00-\u9fff]+'  # 基本汉字
+text = "Hello 世界！Python 编程"
+chinese_chars = re.findall(chinese_pattern, text)
+print(chinese_chars)  # ['世界', '编程']
+```
+
+### 提取HTML标签内容
+```python
+html = "<h1>标题</h1><p>段落内容</p><div>更多内容</div>"
+# 非贪婪匹配
+content_pattern = r'<[^>]+>(.*?)</[^>]+>'
+contents = re.findall(content_pattern, html)
+print(contents)  # ['标题', '段落内容', '更多内容']
+```
+
+### 密码强度验证
+```python
+def validate_password(password):
+    """密码必须包含大小写字母和数字，8-20位"""
+    pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{8,20}$'
+    return bool(re.match(pattern, password))
+
+print(validate_password("Password123"))  # True
+print(validate_password("weak"))         # False
+```
+
+---
+
+## 10. 性能优化
+
+### 1. 预编译模式
+```python
+# ❌ 不推荐：每次调用都编译
+for text in texts:
+    re.findall(r'\d+', text)
+
+# ✅ 推荐：预编译
+pattern = re.compile(r'\d+')
+for text in texts:
+    pattern.findall(text)
+```
+
+### 2. 避免回溯灾难
+```python
+# ❌ 灾难性回溯
+pattern = r'(a+)+b'  # 多个a后跟b
+# 如果字符串是'aaaaaaaaaaaaaaaaaaaaac'，会非常慢
+
+# ✅ 优化方案
+pattern = r'a+b'  # 简化模式
+```
+
+### 3. 使用原始字符串
+```python
+# ❌ 需要双重转义
+pattern = '\\d+'  # 普通字符串
+
+# ✅ 使用原始字符串
+pattern = r'\d+'  # 推荐
+```
+
+### 4. 选择合适的方法
+```python
+text = "hello world"
+
+# 只检查是否存在
+if re.search(r'world', text):  # ✅ 使用search
+    print("找到")
+
+# 检查是否完全匹配
+if re.fullmatch(r'hello world', text):  # ✅ 使用fullmatch
+    print("完全匹配")
+
+# 检查是否以某模式开头
+if re.match(r'^hello', text):  # ✅ 使用match
+    print("以hello开头")
+```
+
+---
+
+## 速查表
+
+### 常用元字符
+```
+.   任意字符（除换行）
+^   字符串开始
+$   字符串结束
+*   0次或多次
++   1次或多次
+?   0次或1次
+{n} 恰好n次
+{n,}至少n次
+{n,m} n到m次
+|   或
+[]  字符类
+()  分组
+\   转义
+```
+
+### 预定义字符类
+```
+\d  数字 [0-9]
+\D  非数字 [^0-9]
+\w  单词字符 [a-zA-Z0-9_]
+\W  非单词字符
+\s  空白字符
+\S  非空白字符
+```
+
+### 边界匹配
+```
+\b  单词边界
+\B  非单词边界
+^   行开始
+$   行结束
+\A  字符串开始
+\Z  字符串结束
+```
+
+### Python标志
+```
+re.I 忽略大小写
+re.M 多行模式
+re.S 点匹配所有
+re.X 详细模式
+re.A 仅ASCII
+re.L 本地化
+```
+
+---
+
+## 调试技巧
+
+```python
+import re
+
+# 1. 使用re.DEBUG查看编译过程
+pattern = re.compile(r'\d{3}-\d{4}', re.DEBUG)
+
+# 2. 在线测试工具（推荐）
+# - regex101.com
+# - pythex.org
+# - regexr.com
+
+# 3. 逐步测试
+def test_pattern(pattern, test_cases):
+    """测试正则表达式"""
+    compiled = re.compile(pattern)
+    for test in test_cases:
+        match = compiled.search(test)
+        if match:
+            print(f"✓ '{test}' -> {match.group()}")
+        else:
+            print(f"✗ '{test}' -> 不匹配")
+
+# 测试示例
+test_pattern(r'\d+', ['abc', '123', 'a1b2'])
+```
+
+## 总结
+
+### 核心要点：
+1. **`.` 匹配任意字符**（除换行符）
+2. **`* + ?`** 控制重复次数
+3. **`^ $`** 匹配字符串边界
+4. **`[]`** 定义字符集
+5. **`()`** 用于分组和捕获
+6. **`|`** 表示"或"关系
+
+### 最佳实践：
+1. 始终使用原始字符串 `r'pattern'`
+2. 频繁使用的模式应预编译
+3. 复杂的模式添加注释 `re.VERBOSE`
+4. 优先使用非贪婪模式 `*?` `+?`
+5. 测试边界情况和极端输入
+
+记住：**正则表达式是工具，不是解决方案**。对于复杂的文本处理，可能需要结合其他方法。

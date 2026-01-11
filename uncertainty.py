@@ -1,4 +1,5 @@
 import sympy as sp
+from data_extraction import roughcut,extract_numbers
 
 n,p,p0,g,t,d,L,D=sp.symbols('n p p0 g t d L D') #变量符号化
 U_p,U_p0,U_g,U_t,U_d,U_L,U_D=sp.symbols(' U_p U_p0 U_g U_t U_d U_L U_D') #不确定度符号化
@@ -62,7 +63,16 @@ class Uncertainty:
         }
         return result#返回平均值，标准偏差，算术平均值标准偏差的字典
     
+read="LIQUID_VISCOSITY.xls"    
+df=roughcut(read).fillna(0)#用零填充nan行
+dfnum=df.map(extract_numbers)
+cname=df.columns.to_list()
+
+#按列处理数据
+uncertainty=Uncertainty()
+dfU=dfnum.apply(uncertainty.U)
     
+
 
             
 
