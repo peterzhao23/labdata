@@ -115,7 +115,7 @@ def coefi_writer():
 coef=coefi_writer()
 coefi=df.apply(coef)  #让用户键入所有系数
 U_=df.apply(lambda series:U(series,coefi))
-print(U_)
+print(U_.dtype)
 
 
 
