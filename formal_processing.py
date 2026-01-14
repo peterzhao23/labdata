@@ -7,15 +7,14 @@ def formal_dealer(latex_ex):
     U=[sp.symbols(f"U{i}") for i in symbols_in_expr]
     #变量存储字典初始化
     sym_dic={}
-    i=0
+    #i=0
     for symbols in symbols_in_expr:
-        sym_dic[symbols]=i+1
-        i=i+1
-    j=0
+        sym_dic[symbols]=None#i+1
+        #i=i+1
+    #j=0
     for u in U:
-        
-        sym_dic[u]=j+1
-        j=j+1
+        sym_dic[u]=None#j+1
+        #j=j+1
     ex_dic={}
     ex_dic["var"]=symbols_in_expr
     ex_dic["U"]=U

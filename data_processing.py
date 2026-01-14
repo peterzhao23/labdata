@@ -1,7 +1,7 @@
 import pandas as pd
 import re
 
-
+#表格粗提取
 def roughcut(excel):
     #初始化行列名称表格
     columns=[]
@@ -46,8 +46,6 @@ def roughcut(excel):
 
 
 
-
-
 #  使用正则表达式提取所有数字（包括小数）
 def extract_numbers(text):
     # 查找所有数字（包括小数）
@@ -64,10 +62,7 @@ def extract_numbers(text):
 
 
     
-read="LIQUID_VISCOSITY.xls"    
-df=roughcut(read)
-dfnum=df.map(extract_numbers)
-cname=df.columns.to_list()
+
 
 def U(series,coe): #计算不确定度   #用到df数据结构中，每一列变成一个series，coe是系数组成的series结构，索引是列名
         
@@ -111,11 +106,16 @@ def coefi_writer():
         return params[col] #调用U函数计算
     return check_writer
 
-    
+read="LIQUID_VISCOSITY.xls"    
+df=roughcut(read)
+dfnum=df.map(extract_numbers)
+cname=df.columns.to_list()    
+
+
 coef=coefi_writer()
-coefi=df.apply(coef)  #让用户键入所有系数
-U_=df.apply(lambda series:U(series,coefi))
-print(U_.dtype)
+coefi=dfnum.apply(coef)  #让用户键入所有系数
+U_=dfnum.apply(lambda series:U(series,coefi))
+print(U_)
 
 
 

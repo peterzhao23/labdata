@@ -1,0 +1,5 @@
+pandas
+sympy
+git+https://github.com/IuvenisSapiens/latex2sympy2.git
+matplotlib
+xlrd
