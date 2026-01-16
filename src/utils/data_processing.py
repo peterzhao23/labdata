@@ -10,11 +10,11 @@ def roughcut(excel):
     while True:
     
         while True:
-            cs=1 #int(input("请输入起始列"))
-            ce=9 #int(input("请输入终止列"))
+            cs=int(input("请输入起始列"))
+            ce=int(input("请输入终止列"))
             cskip=[]
             while True:
-                c="q"#input("请输入需要跳过的列")
+                c=input("请输入需要跳过的列,停止请键入q")
                 if c == "q":
                     break
                 else:
@@ -26,7 +26,7 @@ def roughcut(excel):
                 if i not in cskip:
                     columns.append(i-1)
                 else:
-                    break
+                    continue
 
 
             
@@ -36,8 +36,8 @@ def roughcut(excel):
 #获得需要提取的行范围
     
         while True:
-            rs=3#int(input("请输入起始行"))
-            re=28#int(input("请输入终止行"))
+            rs=int(input("请输入起始行"))
+            re=int(input("请输入终止行"))
             rows.extend([rs,re-rs+1])
             break
         break
@@ -73,7 +73,7 @@ def U(series,coe): #计算不确定度   #用到df数据结构中，每一列变
 
         
     avr=series.mean()
-    Sa=(series.var()/(n-1))**0.5
+    Sa=(series.var()*n/(n-1))**0.5
     Sa_=Sa/(n**0.5)
     Ub=abs(ie/c)
     U=(Sa_**2+Ub**2)**0.5
@@ -106,16 +106,31 @@ def coefi_writer():
         return params[col] #调用U函数计算
     return check_writer
 
-read="LIQUID_VISCOSITY.xls"    
-df=roughcut(read)
-dfnum=df.map(extract_numbers)
-cname=df.columns.to_list()    
+#行数据间的计算 先最基本的四则运算
+'''
+def col_calculator(df):
+    def col_collector():
+        colname=[]
+        while ask !="q":
+            colname.append(int(ask)-1)
+            ask=input("请问你需要对第几列进行操作？停止请键入q")
+        return colname.sort()
 
+    permission=input("你是否需要进行列之间的计算(y/n)")
+    if permission=="n":
+        return df
+    else:
+        tp=int(input("请问你需要进行哪一种运算，请键入数字" 
+        "1.加法"
+        "2.减法"
+        "3.乘法"
+        "4.除法"
+        ))
+        if tp==1 :
+            colname1=col_calculator()
+            mid1=df[colname1[0]]+df[colname1[]]
+'''
 
-coef=coefi_writer()
-coefi=dfnum.apply(coef)  #让用户键入所有系数
-U_=dfnum.apply(lambda series:U(series,coefi))
-print(U_)
 
 
 

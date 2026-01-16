@@ -7,15 +7,14 @@ def formal_dealer(latex_ex):
     U=[sp.symbols(f"U{i}") for i in symbols_in_expr]
     #变量存储字典初始化
     sym_dic={}
-    i=0
+    #i=0
     for symbols in symbols_in_expr:
-        sym_dic[symbols]=i+1
-        i=i+1
-    j=0
+        sym_dic[symbols]=None#i+1
+        #i=i+1
+    #j=0
     for u in U:
-        
-        sym_dic[u]=j+1
-        j=j+1
+        sym_dic[u]=None#j+1
+        #j=j+1
     ex_dic={}
     ex_dic["var"]=symbols_in_expr
     ex_dic["U"]=U
@@ -37,6 +36,12 @@ def Uncertainty(ex_dic):#输入包含表达式所有信息的字典
         E2=E2+(U[i]*partials[i])**2
     E=E2**0.5 
     var_dic={k:sym_dic[k] for k in symbols_in_expr}#只包含变量值的字典
+    for values in var_dic.values:
+        if values==None:
+            a="输入值中包含None，请检查输入"
+            return a
+        else:
+            continue
     expr_result=sympy_expr.subs(var_dic) #平均估计值
     results_E=E.subs(sym_dic)  #注意，替换的字典必须是由symbol对象和值构成的键值对组成的。
     results_U=results_E*abs(expr_result)
@@ -47,12 +52,12 @@ def Uncertainty(ex_dic):#输入包含表达式所有信息的字典
     return results
 
 
-
+'''
 ex_latex=r"n_{\text{ex}} = \frac{(p - p_0) g t d^{2}}{18 L \left(1 + 2.4 \frac{d}{D}\right)}"
 ex_dic=formal_dealer(ex_latex)
 results=Uncertainty(ex_dic)
 print(results)
-
+'''
 
 
             
