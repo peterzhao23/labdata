@@ -19,9 +19,7 @@ def main():
     ex_latex=r"n_{\text{ex}} = \frac{(p - p_0) g t d^{2}}{18 L \left(1 + 2.4 \frac{d}{D}\right)}"
     ex_dic=formal_dealer(ex_latex)
     sym_dic=ex_dic["values"]
-    results=Uncertainty(ex_dic)
-    print(results)
+    
 
 
-if __name__== "__main__":
-    main()
+

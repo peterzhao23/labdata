@@ -12,6 +12,6 @@ BASE_DIR = os.getenv("PROJECT_ROOT",Path(__file__).parent.parent)
 DATA_DIR = BASE_DIR / "src"/ "data"
 
 # 3. 定义具体的表格文件路径
-TABLE_PATH = DATA_DIR / "LIQUID_VISCOSITY.xls"
+TABLE_PATH = DATA_DIR / "testdata.xlsx"
 
 

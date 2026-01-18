@@ -11,13 +11,16 @@ from .formal_processing import(
     formal_dealer,
     Uncertainty
 )
-
+from .lettermapping import(
+    mapping
+)
 __all__=[
     "roughcut",
     "extract_numbers",
     "coefi_writer",
     "formal_dealer",
     "Uncertainty",
-    "U"
+    "U",
+    "mapping"
 ]
 

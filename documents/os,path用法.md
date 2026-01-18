@@ -28,3 +28,13 @@ filepath=Path(__file__)#获取文件当前目录
 parentfile=filepath.parent #获取文件上级目录
 
 ```
+### 注意，在其他文件夹中调用某一文件夹中的函数可以遵循如下几个步骤：
+1. 将该文件夹写成包（增加init函数）    
+2. 在需要调用的文件前修改系统路径，示例如下
+``` python
+from pathlib import Path
+import sys
+testpath=Path(__file__).parent.parent
+sys.path.insert(0,str(testpath)) 
+```
+3. 注意不要在init中修改系统路径，容易紊乱

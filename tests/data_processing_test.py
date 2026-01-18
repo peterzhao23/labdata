@@ -10,11 +10,11 @@ def roughcut(excel):
     while True:
     
         while True:
-            cs=int(input("请输入起始列"))
-            ce=int(input("请输入终止列"))
+            cs=1 #int(input("请输入起始列"))
+            ce=4 #int(input("请输入终止列"))
             cskip=[]
             while True:
-                c=input("请输入需要跳过的列,停止请键入q\n")
+                c="q"#input("请输入需要跳过的列,停止请键入q\n")
                 if c == "q":
                     break
                 else:
@@ -36,8 +36,8 @@ def roughcut(excel):
 #获得需要提取的行范围
     
         while True:
-            rs=int(input("请输入起始行"))
-            re=int(input("请输入终止行"))
+            rs=3 #int(input("请输入起始行"))
+            re=8 #int(input("请输入终止行"))
             rows.extend([rs,re-rs+1])
             break
         break
