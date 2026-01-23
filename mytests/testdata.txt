@@ -1,0 +1,22 @@
+{D: 0.1, L: 'D', d: 'A', g:9.8, p: 10.0, p_0: 1.0, t: 'B'}
+d(mm)    {'avr': 1.0124, 'Sa': 0.005567764362830024, 'Sa_': 0.002489979919597747, 'Ua': 0.002489979919597747, 'Ub': 1.0, 'U': 1.000003099995195}
+t(s)     {'avr': 60.383, 'Sa': nan, 'Sa_': nan, 'Ua': nan, 'Ub': 1.0, 'U': 1.0}
+T(oC)    {'avr': 19.8, 'Sa': nan, 'Sa_': nan, 'Ua': nan, 'Ub': 1.0, 'U': 1.0}
+L(cm)    {'avr': 20.2, 'Sa': nan, 'Sa_': nan, 'Ua': nan, 'Ub': 1.0, 'U': 1.0}
+
+{'avr': np.float64(1.0124), 'Sa': np.float64(0.005567764362830024), 'Sa_': np.float64(0.002489979919597747), 'Ua': np.float64(0.002489979919597747), 'Ub': 0.03333333333333333, 'U': np.float64(0.03342620395903655)}
+var                                                                                                                                   [D, L, d, g, p, p_0, t]
+U                                                                                                                              [UD, UL, Ud, Ug, Up, Up_0, Ut]
+values              {D: None, L: None, d: None, g: None, p: None, p_0: None, t: None, UD: None, UL: None, Ud: None, Ug: None, Up: None, Up_0: None, Ut: None}
+sympy_expression                                                                                               (d**2*g*t*(p - p_0))/((18*L*(1 + 12*d/(5*D))))
+latex_expression      
+
+{'E': 0.03436601146566209, 'U': 0.020394519566209295, 'expr_values': 0.5934502927867302}                                                      n_{\text{ex}} = \frac{(p - p_0) g t d^{2}}{18 L \left(1 + 2.4 \frac{d}{D}\right)}
+
+map[symbols[0]]=0.1
+    map[symbols[1]]=dfcol[3]
+    map[symbols[2]]=dfcol[0]
+    map[symbols[3]]=9.8
+    map[symbols[4]]=10.0
+    map[symbols[5]]=1.0
+    map[symbols[6]]=dfcol[1]

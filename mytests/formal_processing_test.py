@@ -1,4 +1,4 @@
-
+import pandas as pd
 import sympy as sp
 from latex2sympy2 import latex2sympy
 def formal_dealer(latex_ex):
@@ -21,19 +21,19 @@ def formal_dealer(latex_ex):
     ex_dic["values"]=sym_dic
     ex_dic["sympy_expression"]=sympy_expr
     ex_dic["latex_expression"]=latex_ex
-    return ex_dic
+    return pd.Series(ex_dic)
 
 def Uncertainty(ex_dic):#输入包含表达式所有信息的字典
     sympy_expr=ex_dic["sympy_expression"]
     symbols_in_expr=ex_dic["var"]
-    U=ex_dic["U"]
+    Ulist=ex_dic["U"]
     sym_dic=ex_dic["values"]
     ln_n=sp.ln(sympy_expr) #对公式取对数
     partials=[sp.diff(ln_n,var) for var in symbols_in_expr] 
 #合成总不确定度
     E2=0
-    for i in range(len(U)):
-        E2=E2+(U[i]*partials[i])**2
+    for i in range(len(Ulist)):
+        E2=E2+(Ulist[i]*partials[i])**2
     E=E2**0.5 
     var_dic={k:sym_dic[k] for k in symbols_in_expr}#只包含变量值的字典
     for values in var_dic.values():

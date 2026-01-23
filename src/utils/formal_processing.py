@@ -1,4 +1,4 @@
-
+import pandas as pd
 import sympy as sp
 from latex2sympy2 import latex2sympy
 def formal_dealer(latex_ex):
@@ -21,7 +21,7 @@ def formal_dealer(latex_ex):
     ex_dic["values"]=sym_dic
     ex_dic["sympy_expression"]=sympy_expr
     ex_dic["latex_expression"]=latex_ex
-    return ex_dic
+    return pd.Series(ex_dic)
 
 def Uncertainty(ex_dic):#输入包含表达式所有信息的字典
     sympy_expr=ex_dic["sympy_expression"]

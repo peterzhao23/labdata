@@ -6,7 +6,8 @@ from .utils import (
     formal_dealer,
     Uncertainty,
     formal_dealer,
-    Uncertainty
+    Uncertainty,
+    subdic
 )
 
 __all__=[
@@ -16,5 +17,6 @@ __all__=[
     "formal_dealer",
     "Uncertainty",
     "U",
-    "mapping"
+    "mapping",
+    "subdic"
 ]

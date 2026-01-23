@@ -100,12 +100,12 @@ def coefi_writer():
         cc=f"{col}的置信系数"
         iec=f"{col}的仪器误差"
         if col in params:
-            a=input(("是否需要重新输入？y/n"))
+            a=0.1#input(("是否需要重新输入？y/n"))
             if a == "y":
                 params[col]={"c":float(input(f"请输入{cc}")),"ie":float(input(f"请输入{iec}"))}
                 
         else:
-            params[col]={"c":float(input(f"请输入{cc}")),"ie":float(input(f"请输入{iec}"))}
+            params[col]={"c":3.0,"ie":0.1}
         return params[col] #调用U函数计算
     return check_writer
 
